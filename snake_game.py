@@ -64,36 +64,45 @@ clock = pygame.time.Clock()
 while(game):
     print(status)
 
-    for event in pygame.event.get():
-        pygame.display.flip()
+    pygame.display.flip()
 
-        if event.type == pygame.QUIT: 
-            status == GameStatus.stop
-            break
+   
+    keys = pygame.key.get_pressed()
+    if keys[pygame.QUIT]:
+        status == GameStatus.stop
+        
 
-        if status == GameStatus.Starting:
-            draw_popup(screen,'Welcome to Snake Game! Press up or down key to start')
-            if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
-                status = GameStatus.Running
+    if status == GameStatus.Starting:
+        draw_popup(screen,'Welcome to Snake Game! Press up or down key to start')
+        keys = pygame.key.get_pressed()
+        if keys[pygame.KEYUP or pygame.KEYDOWN]:
+            status = GameStatus.Running
 
-        elif status == GameStatus.GameOver:
-            draw_popup(screen,gameOverMsg)
-            time.sleep(5)
-            status = GameStatus.stop
+    elif status == GameStatus.GameOver:
+        draw_popup(screen,gameOverMsg)
+        time.sleep(5)
+        status = GameStatus.stop
 
-        # elif status == GameStatus.Pause :
-        #     draw_popup(screen,'Game Paused')
-        #     print('in pause')
-        #     if event.type == pygame.KEYUP and event.key == pygame.K_s :
-        #         print('dd')
-        #         status == GameStatus.Running
-    
-        elif status == GameStatus.stop :
-            draw_popup(screen, 'Thank you for playing! Game Exiting')
-            # if main_event.type == pygame.QUIT:
-            game = False
-            
-        elif status == GameStatus.Running :
+    if status == GameStatus.Pause:
+        draw_popup(screen,'Game Paused')
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_s]:
+            status = GameStatus.Running
+
+    # elif status == GameStatus.Pause :
+    #     draw_popup(screen,'Game Paused')
+    #     print('in pause')
+    #     if event.type == pygame.KEYUP and event.key == pygame.K_s :
+    #         print('dd')
+    #         status == GameStatus.Running
+
+    elif status == GameStatus.stop :
+        draw_popup(screen, 'Thank you for playing! Game Exiting')
+        # if main_event.type == pygame.QUIT:
+        game = False
+        
+    elif status == GameStatus.Running :
+        for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
                 status = GameStatus.stop
@@ -118,65 +127,62 @@ while(game):
                 elif event.key == pygame.K_DOWN:
                     snake_dx = 0
                     snake_dy = SNAKE_SPEED
-        
-    if status == GameStatus.Pause:
-        draw_popup(screen,'Game Paused')
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_s]:
-            status = GameStatus.Running
+                
+                # Update the position of the snake head by adding the velocity to it
+            snake_x += snake_dx
+            snake_y += snake_dy
+            if snake_x >= SCREEN_WIDTH:
+                    snake_dx = -SNAKE_SPEED
+                    snake_dy = 0
+            elif snake_x <= 0:
+                    snake_dx = SNAKE_SPEED
+                    snake_dy = 0
+            elif snake_y >= SCREEN_HEIGHT:
+                    snake_dx = 0
+                    snake_dy = -SNAKE_SPEED
+            elif snake_y <= 0:
+                    snake_dx = 0
+                    snake_dy = SNAKE_SPEED
 
-    if status == GameStatus.Running:
-        # Update the position of the snake head by adding the velocity to it
-        snake_x += snake_dx
-        snake_y += snake_dy
-        if snake_x >= SCREEN_WIDTH:
-                snake_dx = -SNAKE_SPEED
-                snake_dy = 0
-        elif snake_x <= 0:
-                snake_dx = SNAKE_SPEED
-                snake_dy = 0
-        elif snake_y >= SCREEN_HEIGHT:
-                snake_dx = 0
-                snake_dy = -SNAKE_SPEED
-        elif snake_y <= 0:
-                snake_dx = 0
-                snake_dy = SNAKE_SPEED
-
-        snake_head_rect = pygame.Rect(snake_x, snake_y, SNAKE_SIZE, SNAKE_SIZE)
-        # Check if the snake has eaten the food by checking for a collision between the head and the food
-        if snake_head_rect.colliderect(food_rect):
-            snake_length += 1
-                # Generate a new food position and make sure it does not overlap with the snake body
-            while True:
-                food_x, food_y = generate_food()
-                food_rect = pygame.Rect(food_x, food_y, SNAKE_SIZE, SNAKE_SIZE)  # Update food_rect with new coordinates
-                if (food_x, food_y) not in snake_segments:
-                    break
+            snake_head_rect = pygame.Rect(snake_x, snake_y, SNAKE_SIZE, SNAKE_SIZE)
+            # Check if the snake has eaten the food by checking for a collision between the head and the food
+            if snake_head_rect.colliderect(food_rect):
+                snake_length += 1
+                    # Generate a new food position and make sure it does not overlap with the snake body
+                while True:
+                    food_x, food_y = generate_food()
+                    food_rect = pygame.Rect(food_x, food_y, SNAKE_SIZE, SNAKE_SIZE)  # Update food_rect with new coordinates
+                    if (food_x, food_y) not in snake_segments:
+                        break
 
 
-            # Add the new snake head position to the beginning of the list of segments 
-        snake_segments.insert(0, (snake_x, snake_y))
+                # Add the new snake head position to the beginning of the list of segments 
+            snake_segments.insert(0, (snake_x, snake_y))
 
-            # Remove the last segment of the snake if it has reached its maximum length 
-        if len(snake_segments) > snake_length:
-            snake_segments.pop()
+                # Remove the last segment of the snake if it has reached its maximum length 
+            if len(snake_segments) > snake_length:
+                snake_segments.pop()
 
-            # Check if the snake has collided with its own body by looking for repeated segments and end the game if so
-        if len(snake_segments) != len(set(snake_segments)):
-            status = GameStatus.GameOver
+                # Check if the snake has collided with its own body by looking for repeated segments and end the game if so
+            if len(snake_segments) != len(set(snake_segments)):
+                status = GameStatus.GameOver
 
-            # Fill the screen with black color
-        screen.fill(BLACK)
+                # Fill the screen with black color
+            screen.fill(BLACK)
 
-            # Draw the snake and the food on the screen
-        draw_snake()
-        draw_food()
+                # Draw the snake and the food on the screen
+            draw_snake()
+            draw_food()
 
-            # Update the display
-        pygame.display.flip()
+                # Update the display
+            pygame.display.flip()
 
-            # Set the frame rate to 10 frames per second
-        clock.tick(10)
+                # Set the frame rate to 10 frames per second
+            clock.tick(10)
+    
+
+
+    
         
     
     pygame.display.flip()
