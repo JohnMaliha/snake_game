@@ -67,36 +67,27 @@ while(game):
     for event in pygame.event.get():
         pygame.display.flip()
 
-        if event.type == pygame.QUIT: 
-            status == GameStatus.stop
-            break
+        if status == GameStatus.Exit:
+            time.sleep(1)
+            game = False
 
         if status == GameStatus.Starting:
-            draw_popup(screen,'Welcome to Snake Game! Press up or down key to start')
+            draw_popup(screen,'Welcome to Snake Game! Press the up or down key twice to start')
             if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
                 status = GameStatus.Running
 
         elif status == GameStatus.GameOver:
             draw_popup(screen,gameOverMsg)
-            time.sleep(5)
-            status = GameStatus.stop
-
-        # elif status == GameStatus.Pause :
-        #     draw_popup(screen,'Game Paused')
-        #     print('in pause')
-        #     if event.type == pygame.KEYUP and event.key == pygame.K_s :
-        #         print('dd')
-        #         status == GameStatus.Running
+            status = GameStatus.Stopping
     
-        elif status == GameStatus.stop :
-            draw_popup(screen, 'Thank you for playing! Game Exiting')
-            # if main_event.type == pygame.QUIT:
-            game = False
+        elif status == GameStatus.Stopping :
+            draw_popup(screen, 'Thank you for playing! Exiting game')
+            status = GameStatus.Exit
             
         elif status == GameStatus.Running :
 
             if event.type == pygame.QUIT:
-                status = GameStatus.stop
+                status = GameStatus.Stopping
                 
             if event.type == pygame.KEYUP and event.key == pygame.K_p:
                 status = GameStatus.Pause
@@ -124,7 +115,7 @@ while(game):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_s]:
             status = GameStatus.Running
-
+         
     if status == GameStatus.Running:
         # Update the position of the snake head by adding the velocity to it
         snake_x += snake_dx
@@ -175,8 +166,8 @@ while(game):
             # Update the display
         pygame.display.flip()
 
-            # Set the frame rate to 10 frames per second
-        clock.tick(10)
+        # Set the frame rate to 10 frames per second
+        clock.tick(30)
         
     
     pygame.display.flip()

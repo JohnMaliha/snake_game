@@ -6,6 +6,6 @@ class GameStatus(Enum):
     Win = 2
     Lose = 3
     Pause = 4
-    stop = 5
-    GameOver = 6
-    Popup = 100
+    Stopping = 5
+    Exit = 6
+    GameOver = 7
