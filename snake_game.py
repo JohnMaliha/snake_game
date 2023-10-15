@@ -32,8 +32,7 @@ def draw_food():
 # Create a Rect object for the food
 food_rect = pygame.Rect(food_x, food_y, SNAKE_SIZE, SNAKE_SIZE)
 
-# Define a boolean variable to control the main game loop
-running = True
+
 
 # Define a clock object to control the frame rate
 clock = pygame.time.Clock()
@@ -45,11 +44,14 @@ while running:
         # Create a Rect object for the snake's head to help with collision detection
         # If the user clicks the close button, exit the game loop
         if event.type == pygame.QUIT:
+            show_popup_message = True
+            message = 'Game exit'
             running = False
 
-        
-        if event.key == pygame.K_p:  # Press 'P' to toggle popup
-            show_popup_message = not show_popup_message
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_p:  # Press 'P' to toggle popup
+                show_popup_message = True
+                message = 'test'
 
         # If the user presses a key, change the direction of the snake accordingly
         elif event.type == pygame.KEYDOWN:
@@ -143,7 +145,7 @@ while running:
     draw_food()
 
     if show_popup_message:
-        draw_popup(screen, "This is a popup!")
+        draw_popup(screen, message)
 
     # Update the display
     pygame.display.flip()
