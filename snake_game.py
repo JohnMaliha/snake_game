@@ -20,8 +20,8 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Snake Game")
 
 # Define the size and speed of the snake
-SNAKE_SIZE = 20
-SNAKE_SPEED = 8
+SNAKE_SIZE = 15
+SNAKE_SPEED = 5
 
 # Define the initial position and direction of the snake
 snake_x = SCREEN_WIDTH // 2.5
@@ -57,6 +57,9 @@ def draw_food():
     # Draw the food as a red rectangle
     pygame.draw.rect(screen, RED, [food_x, food_y, SNAKE_SIZE, SNAKE_SIZE])
 
+# Create a Rect object for the food
+food_rect = pygame.Rect(food_x, food_y, SNAKE_SIZE, SNAKE_SIZE)
+
 # Define a boolean variable to control the main game loop
 running = True
 
@@ -67,9 +70,9 @@ clock = pygame.time.Clock()
 while running:
     # Handle the events in the game window
     for event in pygame.event.get():
+        # Create a Rect object for the snake's head to help with collision detection
         # If the user clicks the close button, exit the game loop
         if event.type == pygame.QUIT:
-            print(event.type)
             running = False
         # If the user presses a key, change the direction of the snake accordingly
         elif event.type == pygame.KEYDOWN:
@@ -89,19 +92,60 @@ while running:
     # Update the position of the snake head by adding the velocity to it
     snake_x += snake_dx
     snake_y += snake_dy
+   
+    # Check if the snake has gone out of the screen boundaries
+    # if  snake_x >= SCREEN_WIDTH or snake_x < 0 :
+    #     snake_dx = -SNAKE_SPEED
+    #     snake_dy = SNAKE_SPEED
 
-    # Check if the snake has gone out of the screen boundaries and end the game if so
-    if snake_x < 0 or snake_x >= SCREEN_WIDTH or snake_y < 0 or snake_y >= SCREEN_HEIGHT:
-        running = False
+    # if snake_y >= SCREEN_HEIGHT or snake_y < 0 :
+    #     snake_dx = 0
+    #     snake_dy = -SNAKE_SPEED
+
+    # if snake_y >= SCREEN_HEIGHT or snake_x < 0 :
+    #     snake_dx = 0
+    #     snake_dy = -SNAKE_SPEED
+
+    # if snake_y >= SCREEN_WIDTH or snake_y < 0 :
+    #     snake_dx = -SNAKE_SPEED
+    #     snake_dy = SNAKE_SPEED
+    
+    # if snake_y >= SCREEN_HEIGHT and snake_x >= SCREEN_WIDTH:
+    #     snake_dx = -SNAKE_SPEED
+    #     snake_dy = -SNAKE_SPEED
+    if snake_x >= SCREEN_WIDTH:
+        snake_dx = -SNAKE_SPEED
+        snake_dy = 0
+    elif snake_x <= 0:
+        snake_dx = SNAKE_SPEED
+        snake_dy = 0
+    elif snake_y >= SCREEN_HEIGHT:
+        snake_dx = 0
+        snake_dy = -SNAKE_SPEED
+    elif snake_y <= 0:
+        snake_dx = 0
+        snake_dy = SNAKE_SPEED
 
     # Check if the snake has eaten the food by comparing their positions and increase its length if so
-    if snake_x == food_x and snake_y == food_y:
+    # if snake_x == food_x and snake_y == food_y:
+    #     snake_length += 1
+        # # Generate a new food position and make sure it does not overlap with the snake body
+        # while True:
+        #     food_x, food_y = generate_food()
+        #     if (food_x, food_y) not in snake_segments:
+        #         break
+        
+    snake_head_rect = pygame.Rect(snake_x, snake_y, SNAKE_SIZE, SNAKE_SIZE)
+     # Check if the snake has eaten the food by checking for a collision between the head and the food
+    if snake_head_rect.colliderect(food_rect):
         snake_length += 1
         # Generate a new food position and make sure it does not overlap with the snake body
         while True:
             food_x, food_y = generate_food()
+            food_rect = pygame.Rect(food_x, food_y, SNAKE_SIZE, SNAKE_SIZE)  # Update food_rect with new coordinates
             if (food_x, food_y) not in snake_segments:
                 break
+
 
     # Add the new snake head position to the beginning of the list of segments 
     snake_segments.insert(0, (snake_x, snake_y))
