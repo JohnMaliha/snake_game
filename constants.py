@@ -9,21 +9,3 @@ SCREEN_HEIGHT = 650
 # Define the size and speed of the snake
 SNAKE_SIZE = 15
 SNAKE_SPEED = 5
-
-# Define a boolean variable to control the main game loop
-running = True
-
-
-# Define the initial position and direction of the snake
-snake_x = SCREEN_WIDTH // 2.5
-snake_y = SCREEN_HEIGHT // 2.5
-snake_dx = 0
-snake_dy = 0
-show_popup_message = False
-message = ''
-
-# Define a list to store the snake segments
-snake_segments = []
-
-# Define the initial length of the snake
-snake_length = 1
