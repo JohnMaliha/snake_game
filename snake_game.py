@@ -1,39 +1,18 @@
 # Import pygame module
 import pygame
-import random
+from pop_up import draw_popup
+from constants import *
+from functions import *
+
 
 # Initialize pygame
 pygame.init()
 
-# Define some colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-
 # Define the size of the screen and create it
-SCREEN_WIDTH = 850
-SCREEN_HEIGHT = 650
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # Set the title of the window
 pygame.display.set_caption("Snake Game")
-
-# Define the size and speed of the snake
-SNAKE_SIZE = 15
-SNAKE_SPEED = 5
-
-# Define the initial position and direction of the snake
-snake_x = SCREEN_WIDTH // 2.5
-snake_y = SCREEN_HEIGHT // 2.5
-snake_dx = 0
-snake_dy = 0
-
-# Define a list to store the snake segments
-snake_segments = []
-
-# Define the initial length of the snake
-snake_length = 1
 
 # Define a function to draw the snake on the screen
 def draw_snake():
@@ -41,13 +20,6 @@ def draw_snake():
     for segment in snake_segments:
         pygame.draw.rect(screen, GREEN, [segment[0], segment[1], SNAKE_SIZE, SNAKE_SIZE])
 
-# Define a function to generate a random position for the food
-def generate_food():
-    # Choose a random x and y coordinate within the screen boundaries
-    food_x = SNAKE_SIZE * (random.randint(0, SCREEN_WIDTH // SNAKE_SIZE - 1))
-    food_y = SNAKE_SIZE * (random.randint(0, SCREEN_HEIGHT // SNAKE_SIZE - 1))
-    # Return the food position as a tuple
-    return (food_x, food_y)
 
 # Generate an initial food position
 food_x, food_y = generate_food()
@@ -74,6 +46,11 @@ while running:
         # If the user clicks the close button, exit the game loop
         if event.type == pygame.QUIT:
             running = False
+
+        
+        if event.key == pygame.K_p:  # Press 'P' to toggle popup
+            show_popup_message = not show_popup_message
+
         # If the user presses a key, change the direction of the snake accordingly
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
@@ -134,7 +111,7 @@ while running:
         #     food_x, food_y = generate_food()
         #     if (food_x, food_y) not in snake_segments:
         #         break
-        
+
     snake_head_rect = pygame.Rect(snake_x, snake_y, SNAKE_SIZE, SNAKE_SIZE)
      # Check if the snake has eaten the food by checking for a collision between the head and the food
     if snake_head_rect.colliderect(food_rect):
@@ -164,6 +141,9 @@ while running:
     # Draw the snake and the food on the screen
     draw_snake()
     draw_food()
+
+    if show_popup_message:
+        draw_popup(screen, "This is a popup!")
 
     # Update the display
     pygame.display.flip()
