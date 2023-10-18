@@ -14,3 +14,4 @@ SNAKE_SPEED = 5
 
 FPS = 30
 
+EYE_IMAGE = 'assets/eye.png'
