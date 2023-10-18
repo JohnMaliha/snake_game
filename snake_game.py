@@ -33,10 +33,15 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 # Set the title of the window
 pygame.display.set_caption(Messages.APP_NAME.value)
 
+eye = pygame.image.load(EYE_IMAGE)
+eyeTransformed  = pygame.transform.scale(eye, (15,15))
+
 # Define a function to draw the snake on the screen
 def draw_snake():
     # Loop through the snake segments and draw them as rectangles
     for segment in snake_segments:
+        head_x, head_y = snake_segments[0] 
+        screen.blit(eyeTransformed, (head_x, head_y))
         pygame.draw.rect(screen, GREEN, [segment[0], segment[1], SNAKE_SIZE, SNAKE_SIZE])
 
 
