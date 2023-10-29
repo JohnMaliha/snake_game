@@ -1,11 +1,9 @@
 from constants import *
 import pygame
 
-
-
 def draw_popup(screen, message):
     font = pygame.font.SysFont(None, 20)
-    popup_width = 525
+    popup_width = 600
     popup_height = 100
     popup_x = (SCREEN_WIDTH - popup_width) / 2
     popup_y = (SCREEN_HEIGHT - popup_height) / 2

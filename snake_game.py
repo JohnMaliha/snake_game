@@ -34,13 +34,13 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption(Messages.APP_NAME.value)
 
 eye = pygame.image.load(EYE_IMAGE)
-eyeTransformed  = pygame.transform.scale(eye, (15,15))
+eyeTransformed  = pygame.transform.scale(eye, (SNAKE_SIZE,SNAKE_SIZE))
 
 # Define a function to draw the snake on the screen
 def draw_snake():
     # Loop through the snake segments and draw them as rectangles
     for segment in snake_segments:
-        head_x, head_y = snake_segments[0] 
+        head_x, head_y = snake_segments[0]
         screen.blit(eyeTransformed, (head_x, head_y))
         pygame.draw.rect(screen, GREEN, [segment[0], segment[1], SNAKE_SIZE, SNAKE_SIZE])
 
@@ -54,13 +54,13 @@ def draw_food():
     pygame.draw.rect(screen, RED, [food_x, food_y, SNAKE_SIZE, SNAKE_SIZE])
 
 # Create a Rect object for the food
-food_rect = pygame.Rect(food_x, food_y, SNAKE_SIZE, SNAKE_SIZE)
+food_rect = pygame.Rect(food_x, food_y, FOOD_SIZE, FOOD_SIZE)
 
 # Define a clock object to control the frame rate
 clock = pygame.time.Clock()
 
 while(game):
-    print(status)
+    #print(status)
 
     for event in pygame.event.get():
         pygame.display.flip()
@@ -133,16 +133,19 @@ while(game):
                 snake_dy = SNAKE_SPEED
 
         snake_head_rect = pygame.Rect(snake_x, snake_y, SNAKE_SIZE, SNAKE_SIZE)
-        # Check if the snake has eaten the food by checking for a collision between the head and the food
+        # Check if the snake has eaten the food by checking for a collision between the head and the f
         if snake_head_rect.colliderect(food_rect):
-            snake_length += 1
-                # Generate a new food position and make sure it does not overlap with the snake body
+            print("before :",snake_length)
+            snake_length += 2
+            draw_snake()
+            print("after", snake_length)
+
             while True:
                 food_x, food_y = generate_food()
                 food_rect = pygame.Rect(food_x, food_y, SNAKE_SIZE, SNAKE_SIZE)  # Update food_rect with new coordinates
                 if (food_x, food_y) not in snake_segments:
                     break
-
+              
 
         # Add the new snake head position to the beginning of the list of segments 
         snake_segments.insert(0, (snake_x, snake_y))
@@ -165,7 +168,6 @@ while(game):
             # Update the display
         pygame.display.flip()
 
-        # Set the frame rate to 10 frames per second
         clock.tick(FPS)
         
     
