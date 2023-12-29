@@ -5,6 +5,7 @@ from popup_utils import draw_popup
 from functions import *
 from enums import *
 from constants import *
+from score import *
 
 # Initialize pygame
 pygame.init()
@@ -23,6 +24,11 @@ snake_segments = []
 
 # Define the initial length of the snake
 snake_length = 1
+
+text_color = pygame.Color(255, 255, 255)
+text_font = pygame.font.SysFont("Arial", 32)
+
+score = 0
 
 
 status = GameStatus.Starting
@@ -135,6 +141,7 @@ while(game):
         snake_head_rect = pygame.Rect(snake_x, snake_y, SNAKE_SIZE, SNAKE_SIZE)
         # Check if the snake has eaten the food by checking for a collision between the head and the f
         if snake_head_rect.colliderect(food_rect):
+            score += 1
             print("before :",snake_length)
             snake_length += 2
             draw_snake()
@@ -164,6 +171,7 @@ while(game):
             # Draw the snake and the food on the screen
         draw_snake()
         draw_food()
+        show_score(text_font=text_font,window=screen,text_color=text_color,score=score)
 
             # Update the display
         pygame.display.flip()
